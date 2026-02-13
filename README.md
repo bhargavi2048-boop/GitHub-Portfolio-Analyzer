@@ -271,7 +271,16 @@ Insights Generation
     ├─ Create Recommendations
     └─ Analyze Languages
 
-  
+  ## ▶️ Live Demo Video
+
+https://drive.google.com/file/d/17Zf3uUkUryLY90wSlil5NJlgzwIKAV1h/view?usp=sharing
+
+Watch this video to see:
+- How to use the tool
+- Real-time analysis
+- Understanding your score
+- Implementing recommendations
+- 
 🛠 Installation & Setup
 Quick Start (No Installation Needed!)
 
@@ -313,6 +322,7 @@ git commit -m "Add feature: ..."
 git push origin main
 
 # 5. Create Pull Request on GitHub
+
 📝 How to Use
 Complete Step-by-Step Guide
 STEP 1: Enter Your GitHub Profile
@@ -435,7 +445,7 @@ Now that you understand your profile:
    - Improve existing ones
    - Stay consistent
    - Re-analyze monthly
-   - 
+   
 🎯 Success Metrics
 What You Should Achieve
 After using this tool, you'll be able to:
