@@ -271,19 +271,6 @@ Insights Generation
     ├─ Create Recommendations
     └─ Analyze Languages
 
-    ↓
-UI Rendering
-    └─ Beautiful Results Display
-    ## ▶️ Live Demo Video
-
-**[🎬 Demo Video - 5 Minutes]
-
-
-Watch this video to see:
-- How to use the tool
-- Real-time analysis
-- Understanding your score
-- Implementing recommendations
   
 🛠 Installation & Setup
 Quick Start (No Installation Needed!)
