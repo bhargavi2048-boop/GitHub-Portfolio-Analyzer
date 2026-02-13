@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Portfolio Analyzer & Enhancer - Bhargavi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-teal: #0d7377;
+            --dark-teal: #051d2a;
+            --light-teal: #14919b;
+            --accent-teal: #76c7d1;
+            --text-dark: #1a1a1a;
+            --text-light: #ffffff;
+            --bg-light: #f5f9fa;
+            --bg-card: #ffffff;
+            --border-color: #e0e0e0;
+            --success: #28a745;
+            --warning: #ffc107;
+            --error: #dc3545;
+            --shadow: 0 2px 8px rgba(13, 115, 119, 0.1);
+            --shadow-lg: 0 8px 24px rgba(13, 115, 119, 0.15);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0d7377 0%, #051d2a 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        .header {
+            text-align: center;
+            padding: 80px 20px 60px;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            animation: slideDown 0.8s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 0.95em;
+            opacity: 0.85;
+            font-style: italic;
+        }
+
+        .main-content { margin-bottom: 40px; }
+
+        .input-section {
+            margin-bottom: 50px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-card {
+            background: var(--bg-card);
+            padding: 50px 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .input-card h2 {
+            color: var(--primary-teal);
+            margin-bottom: 15px;
+            font-size: 2em;
+        }
+
+        .input-card p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+
+        .input-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .option-toggle {
+            padding: 10px 20px;
+            background: var(--bg-light);
+            border: 2px solid var(--accent-teal);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--primary-teal);
+        }
+
+        .option-toggle.active {
+            background: var(--primary-teal);
+            color: var(--text-light);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .input-field {
+            flex: 1;
+            min-width: 300px;
+            padding: 16px 18px;
+            border: 2px solid var(--accent-teal);
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-teal);
+            box-shadow: 0 0 0 4px rgba(13, 115, 119, 0.1);
+            background: #fafbfc;
+        }
+
+        .btn-analyze, .btn-retry {
+            padding: 16px 40px;
+            background: linear-gradient(135deg, var(--primary-teal) 0%, var(--light-teal) 100%);
+            color: var(--text-light);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(13, 115, 119, 0.2);
+        }
+
+        .btn-analyze:hover, .btn-retry:hover {
+            background: linear-gradient(135deg, var(--dark-teal) 0%, var(--primary-teal) 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(13, 115, 119, 0.3);
+        }
+
+        .btn-analyze:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .info-text {
+            color: var(--light-teal);
+            font-size: 0.95em;
+            margin-top: 15px;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 80px 20px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            margin: 40px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .loading-state.hidden { display: none; }
+
+        .spinner {
+            border: 5px solid var(--accent-teal);
+            border-top: 5px solid var(--primary-teal);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-state p {
+            color: var(--primary-teal);
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        .error-state {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            color: var(--error);
+            padding: 40px;
+            border-radius: 16px;
+            margin: 40px 0;
+            text-align: center;
+            border-left: 6px solid var(--error);
+        }
+
+        .error-state.hidden { display: none; }
+
+        .error-state p {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .results-section { animation: fadeIn 0.6s ease; }
+        .results-section.hidden { display: none; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .score-card {
+            background: linear-gradient(135deg, var(--primary-teal) 0%, var(--light-teal) 100%);
+            color: var(--text-light);
+            padding: 50px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .score-container {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid var(--text-light);
+            flex-shrink: 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-value {
+            font-size: 3.5em;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-top: 8px;
+        }
+
+        .score-description h2 {
+            margin-bottom: 15px;
+            font-size: 2em;
+        }
+
+        .interpretation {
+            font-size: 1.1em;
+            opacity: 0.95;
+            line-height: 1.7;
+        }
+
+        .profile-card {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border-left: 6px solid var(--primary-teal);
+        }
+
+        .profile-header {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 5px solid var(--primary-teal);
+            object-fit: cover;
+            box-shadow: 0 8px 24px rgba(13, 115, 119, 0.2);
+        }
+
+        .profile-info { flex: 1; min-width: 300px; }
+
+        .profile-info h2 {
+            color: var(--primary-teal);
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+
+        .profile-username {
+            color: #888;
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
+
+        .bio {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .stat-label {
+            color: #999;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            color: var(--primary-teal);
+            font-size: 2em;
+            font-weight: 700;
+        }
+
+        .details-section {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .details-section h3 {
+            color: var(--primary-teal);
+            margin-bottom: 25px;
+            font-size: 1.6em;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-item {
+            padding: 20px;
+            background: var(--bg-light);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-teal);
+        }
+
+        .detail-label {
+            color: var(--primary-teal);
+            font-weight: 700;
+            font-size: 0.85em;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            color: var(--text-dark);
+            font-size: 1.1em;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .detail-value a {
+            color: var(--primary-teal);
+            text-decoration: none;
+        }
+
+        .detail-value a:hover {
+            text-decoration: underline;
+        }
+
+        .scoring-breakdown {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .scoring-breakdown h3 {
+            color: var(--primary-teal);
+            margin-bottom: 30px;
+            font-size: 1.6em;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .metric-item {
+            padding: 25px;
+            background: var(--bg-light);
+            border-radius: 12px;
+            border: 2px solid var(--accent-teal);
+            transition: all 0.3s ease;
+        }
+
+        .metric-item:hover {
+            border-color: var(--primary-teal);
+            box-shadow: 0 4px 12px rgba(13, 115, 119, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .metric-name {
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .metric-value {
+            color: var(--primary-teal);
+            font-weight: 700;
+            font-size: 1.1em;
+            background: rgba(13, 115, 119, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--light-teal), var(--primary-teal));
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feedback-card {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .feedback-header {
+            margin-bottom: 25px;
+            border-bottom: 3px solid var(--accent-teal);
+            padding-bottom: 15px;
+        }
+
+        .feedback-header h3 {
+            color: var(--primary-teal);
+            font-size: 1.5em;
+        }
+
+        .feedback-list { list-style: none; }
+
+        .feedback-list li {
+            padding: 15px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #333;
+            line-height: 1.7;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .feedback-list li:last-child { border-bottom: none; }
+
+        .feedback-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .improvements .feedback-list li:before {
+            content: "⚡";
+            color: var(--warning);
+        }
+
+        .recommendations-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .recommendation-item {
+            background: linear-gradient(135deg, var(--bg-light) 0%, #ffffff 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary-teal);
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(13, 115, 119, 0.15);
+        }
+
+        .recommendation-title {
+            color: var(--primary-teal);
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .recommendation-text {
+            color: #555;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .repos-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .repo-item {
+            background: var(--bg-light);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid var(--accent-teal);
+            transition: all 0.3s ease;
+        }
+
+        .repo-item:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(13, 115, 119, 0.2);
+            border-color: var(--primary-teal);
+        }
+
+        .repo-name {
+            color: var(--primary-teal);
+            font-weight: 700;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            word-break: break-word;
+        }
+
+        .repo-desc {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .repo-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        .repo-lang {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(13, 115, 119, 0.15);
+            color: var(--primary-teal);
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.85em;
+        }
+
+        .language-section {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .language-section h3 {
+            color: var(--primary-teal);
+            margin-bottom: 25px;
+            font-size: 1.5em;
+        }
+
+        .language-chart {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .language-item {
+            background: var(--bg-light);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary-teal);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .language-item:hover {
+            box-shadow: 0 8px 16px rgba(13, 115, 119, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .language-name {
+            color: var(--primary-teal);
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .language-percent {
+            font-size: 2.2em;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .action-buttons {
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 40px;
+        }
+
+        .footer {
+            background: var(--dark-teal);
+            color: var(--text-light);
+            padding: 50px 40px;
+            border-radius: 16px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h4 {
+            color: var(--accent-teal);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .footer-section p {
+            opacity: 0.9;
+            line-height: 1.8;
+            font-size: 0.95em;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            opacity: 0.85;
+            margin-bottom: 8px;
+        }
+
+        .footer-section a {
+            color: var(--accent-teal);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--text-light);
+            text-decoration: underline;
+        }
+
+        .footer-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 30px 0;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-bottom p {
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+
+        .builder-credit {
+            color: var(--accent-teal);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.2em; }
+            .subtitle { font-size: 1.1em; }
+            .input-card { padding: 30px 20px; }
+            .input-group { flex-direction: column; }
+            .input-field, .btn-analyze { width: 100%; }
+            .score-container { flex-direction: column; text-align: center; gap: 40px; }
+            .profile-header { flex-direction: column; text-align: center; }
+            .metrics-grid, .recommendations-list, .repos-list { grid-template-columns: 1fr; }
+            .score-card { padding: 30px 20px; }
+            .details-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 10px; }
+            .header { padding: 40px 10px 30px; }
+            .header h1 { font-size: 1.8em; }
+            .input-card { padding: 20px; }
+            .score-circle { width: 140px; height: 140px; }
+            .avatar { width: 100px; height: 100px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🚀 GitHub Portfolio Analyzer</h1>
+            <p class="subtitle">Transform Your Repositories into Recruiter-Ready Proof</p>
+            <p class="tagline">"Your code speaks louder than words" - Turn your GitHub into your best resume</p>
+        </header>
+
+        <main class="main-content">
+            <section class="input-section">
+                <div class="input-card">
+                    <h2>📊 Analyze Your GitHub Profile</h2>
+                    <p>Enter your GitHub profile URL or username to get a comprehensive analysis</p>
+                    
+                    <div class="input-options">
+                        <button class="option-toggle active" id="optionUrl" onclick="setInputType('url')">🔗 By URL</button>
+                        <button class="option-toggle" id="optionUsername" onclick="setInputType('username')">👤 By Username</button>
+                    </div>
+
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="githubInput" 
+                            placeholder="https://github.com/username or just username" 
+                            class="input-field"
+                        >
+                        <button id="analyzeBtn" class="btn-analyze" onclick="handleAnalysis()">Analyze Profile</button>
+                    </div>
+                    <p class="info-text">📈 Analyzes: Repositories • Documentation • Commit History • Code Quality • Impact & More</p>
+                </div>
+            </section>
+
+            <div id="loadingState" class="loading-state hidden">
+                <div class="spinner"></div>
+                <p>Analyzing your GitHub profile...</p>
+                <p style="font-size: 0.9em; color: #999; margin-top: 10px;">This may take a few moments</p>
+            </div>
+
+            <div id="errorState" class="error-state hidden">
+                <p id="errorMessage"></p>
+                <button onclick="resetForm()" class="btn-retry">Try Again</button>
+            </div>
+
+            <section id="resultsSection" class="results-section hidden">
+                <div class="score-card">
+                    <div class="score-container">
+                        <div class="score-circle">
+                            <div class="score-value" id="portfolioScore">0</div>
+                            <div class="score-label">/100</div>
+                        </div>
+                        <div class="score-description">
+                            <h2>Your Portfolio Score</h2>
+                            <p id="scoreInterpretation" class="interpretation"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <img id="userAvatar" class="avatar" alt="User Avatar">
+                        <div class="profile-info">
+                            <h2 id="userName"></h2>
+                            <p class="profile-username" id="userUsername"></p>
+                            <p id="userBio" class="bio"></p>
+                            <div class="profile-stats">
+                                <div class="stat">
+                                    <span class="stat-label">Repositories</span>
+                                    <span class="stat-value" id="repoCount">0</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Followers</span>
+                                    <span class="stat-value" id="followerCount">0</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Total Stars</span>
+                                    <span class="stat-value" id="starCount">0</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Following</span>
+                                    <span class="stat-value" id="followingCount">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-section">
+                    <h3>📋 Account Details & Information</h3>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">📍 Location</div>
+                            <div class="detail-value" id="userLocation">Not Specified</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">🌐 Website / Blog</div>
+                            <div class="detail-value" id="userWebsite">Not Specified</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">🏢 Company</div>
+                            <div class="detail-value" id="userCompany">Not Specified</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">📅 Account Created</div>
+                            <div class="detail-value" id="accountCreated">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">🔄 Last Activity</div>
+                            <div class="detail-value" id="lastActivity">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">📝 Public Gists</div>
+                            <div class="detail-value" id="publicGists">0</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">👁️ Profile Views</div>
+                            <div class="detail-value" id="profileViews">N/A</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">🔐 Account Type</div>
+                            <div class="detail-value" id="accountType">User</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scoring-breakdown">
+                    <h3>📈 Portfolio Scoring Breakdown</h3>
+                    <p style="color: #666; margin-bottom: 25px; font-size: 0.95em;">Based on 6 key metrics evaluated by recruiters:</p>
+                    <div class="metrics-grid">
+                        <div class="metric-item">
+                            <div class="metric-header">
+                                <span class="metric-name">Documentation Quality</span>
+                                <span class="metric-value" id="docScore">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="docProgress" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-header">
+                                <span class="metric-name">Code Structure</span>
+                                <span class="metric-value" id="codeScore">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="codeProgress" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-header">
+                                <span class="metric-name">Activity Consistency</span>
+                                <span class="metric-value" id="activityScore">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="activityProgress" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-header">
+                                <span class="metric-name">Repository Org</span>
+                                <span class="metric-value" id="orgScore">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="orgProgress" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-header">
+                                <span class="metric-name">Project Impact</span>
+                                <span class="metric-value" id="impactScore">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="impactProgress" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-header">
+                                <span class="metric-name">Technical Depth</span>
+                                <span class="metric-value" id="techScore">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="techProgress" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feedback-card strengths">
+                    <div class="feedback-header">
+                        <h3>💪 Your Strengths</h3>
+                    </div>
+                    <ul id="strengthsList" class="feedback-list"></ul>
+                </div>
+
+                <div class="feedback-card improvements">
+                    <div class="feedback-header">
+                        <h3>⚠️ Areas for Improvement</h3>
+                    </div>
+                    <ul id="improvementsList" class="feedback-list"></ul>
+                </div>
+
+                <div class="feedback-card recommendations">
+                    <div class="feedback-header">
+                        <h3>🎯 Actionable Recommendations</h3>
+                    </div>
+                    <div id="recommendationsList" class="recommendations-list"></div>
+                </div>
+
+                <div class="feedback-card repositories">
+                    <div class="feedback-header">
+                        <h3>📚 Top Repositories</h3>
+                    </div>
+                    <div id="reposList" class="repos-list"></div>
+                </div>
+
+                <div class="language-section">
+                    <h3>💻 Programming Languages</h3>
+                    <div id="languageChart" class="language-chart"></div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="newAnalysisBtn" class="btn-analyze" onclick="resetForm()">🔄 Analyze Another Profile</button>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>🚀 About This Tool</h4>
+                    <p>GitHub Portfolio Analyzer helps students and developers understand how recruiters evaluate their GitHub profiles. Get actionable feedback and turn repositories into recruiter-ready proof.</p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>📊 What We Analyze</h4>
+                    <ul>
+                        <li>✓ Public Repositories & Forks</li>
+                        <li>✓ Documentation Quality</li>
+                        <li>✓ Code Structure & Organization</li>
+                        <li>✓ Commit History & Activity</li>
+                        <li>✓ Stars, Forks & Impact</li>
+                        <li>✓ Language Diversity</li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>💡 Tips for Success</h4>
+                    <ul>
+                        <li>📌 Pin your 3-4 best projects</li>
+                        <li>📝 Write comprehensive READMEs</li>
+                        <li>🎨 Add badges & screenshots</li>
+                        <li>📅 Commit consistently</li>
+                        <li>✨ Focus on code quality</li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>🎓 For Students</h4>
+                    <p>Your GitHub profile is your digital portfolio. Make it count! Use this tool to understand what recruiters look for.</p>
+                </div>
+            </div>
+
+            <div class="footer-divider"></div>
+
+            <div class="footer-bottom">
+                <p>Built with ❤️ for developers who want to make their work shine</p>
+                <p>Created by <span class="builder-credit">Bhargavi</span> | <a href="https://github.com/bhargavi2048-boop" target="_blank">GitHub Profile</a></p>
+                <p style="font-size: 0.9em; opacity: 0.7; margin-top: 20px;">© 2026 GitHub Portfolio Analyzer. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const GITHUB_API_BASE = 'https://api.github.com';
+        let inputType = 'url';
+
+        const githubInput = document.getElementById('githubInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loadingState = document.getElementById('loadingState');
+        const errorState = document.getElementById('errorState');
+        const errorMessage = document.getElementById('errorMessage');
+        const resultsSection = document.getElementById('resultsSection');
+
+        function setInputType(type) {
+            inputType = type;
+            document.getElementById('optionUrl').classList.remove('active');
+            document.getElementById('optionUsername').classList.remove('active');
+            
+            if (type === 'url') {
+                document.getElementById('optionUrl').classList.add('active');
+                githubInput.placeholder = 'https://github.com/username';
+            } else {
+                document.getElementById('optionUsername').classList.add('active');
+                githubInput.placeholder = 'Enter GitHub username';
+            }
+            githubInput.focus();
+        }
+
+        function extractUsername(input) {
+            input = input.trim();
+            
+            if (input.startsWith('https://')) {
+                const match = input.match(/github\.com\/([a-zA-Z0-9-]+)/);
+                if (match) return match[1];
+                throw new Error('Invalid GitHub URL format. Use: https://github.com/username');
+            } else if (input.startsWith('http://')) {
+                throw new Error('Use HTTPS URLs. Format: https://github.com/username');
+            } else {
+                if (input.length === 0) throw new Error('Please enter a GitHub username or URL');
+                return input;
+            }
+        }
+
+        async function handleAnalysis() {
+            const input = githubInput.value.trim();
+
+            if (!input) {
+                showError('Please enter a GitHub username or profile URL');
+                return;
+            }
+
+            let username;
+            try {
+                username = extractUsername(input);
+            } catch (error) {
+                showError(error.message);
+                return;
+            }
+
+            showLoading();
+
+            try {
+                const userData = await fetchUserData(username);
+                const reposData = await fetchRepositories(username);
+                
+                const analysis = analyzePortfolio(userData, reposData);
+                displayResults(userData, reposData, analysis);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function fetchUserData(username) {
+            const response = await fetch(`${GITHUB_API_BASE}/users/${username}`);
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('❌ GitHub user not found. Please check the username or URL.');
+                }
+                throw new Error('Failed to fetch user data from GitHub');
+            }
+
+            return await response.json();
+        }
+
+        async function fetchRepositories(username) {
+            const response = await fetch(
+                `${GITHUB_API_BASE}/users/${username}/repos?per_page=100&sort=updated`
+            );
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch repositories');
+            }
+
+            return await response.json();
+        }
+
+        function analyzePortfolio(userData, repos) {
+            const scores = {
+                documentation: calculateDocumentationScore(repos),
+                codeStructure: calculateCodeStructureScore(repos),
+                activityConsistency: calculateActivityConsistency(repos, userData),
+                repositoryOrganization: calculateRepositoryOrganization(repos),
+                projectImpact: calculateProjectImpact(repos),
+                technicalDepth: calculateTechnicalDepth(repos)
+            };
+
+            const weightedScore = calculateWeightedScore(scores);
+
+            return {
+                scores,
+                weightedScore,
+                strengths: generateStrengths(scores, repos),
+                improvements: generateImprovements(scores, repos),
+                recommendations: generateRecommendations(scores, repos),
+                languages: analyzeLanguages(repos)
+            };
+        }
+
+        function calculateDocumentationScore(repos) {
+            if (repos.length === 0) return 0;
+            let score = 0;
+            let count = 0;
+
+            repos.forEach(repo => {
+                if (!repo.fork) {
+                    count++;
+                    if (repo.description && repo.description.length > 20) score += 25;
+                    if (repo.topics && repo.topics.length > 0) score += 25;
+                    if (repo.updated_at) {
+                        const lastUpdate = new Date(repo.updated_at);
+                        const months = (new Date() - lastUpdate) / (1000 * 60 * 60 * 24 * 30);
+                        if (months < 6) score += 25;
+                    }
+                    if (repo.has_wiki) score += 25;
+                }
+            });
+
+            return count > 0 ? (score / (count * 100)) * 100 : 0;
+        }
+
+        function calculateCodeStructureScore(repos) {
+            if (repos.length === 0) return 0;
+            let score = 0;
+            let count = 0;
+
+            repos.forEach(repo => {
+                if (!repo.fork) {
+                    count++;
+                    if (repo.size > 500) score += 30;
+                    else if (repo.size > 100) score += 20;
+                    if (repo.language) score += 15;
+                    if (repo.open_issues_count > 0) score += 15;
+                    if (repo.forks_count > 0) score += 20;
+                    if (repo.pushed_at) {
+                        const lastPush = new Date(repo.pushed_at);
+                        const weeks = (new Date() - lastPush) / (1000 * 60 * 60 * 24 * 7);
+                        if (weeks < 4) score += 20;
+                    }
+                }
+            });
+
+            return count > 0 ? Math.min((score / (count * 120)) * 100, 100) : 0;
+        }
+
+        function calculateActivityConsistency(repos, userData) {
+            if (repos.length === 0) return 0;
+            const publicRepos = repos.filter(r => !r.fork);
+            if (publicRepos.length === 0) return 0;
+
+            let score = 0;
+            const now = new Date();
+            const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 6, now.getDate());
+            const recentRepos = publicRepos.filter(r => new Date(r.pushed_at) > sixMonthsAgo).length;
+
+            if (recentRepos / publicRepos.length > 0.7) score += 40;
+            else if (recentRepos / publicRepos.length > 0.4) score += 20;
+
+            if (publicRepos.length > 5) score += 30;
+            else if (publicRepos.length > 2) score += 15;
+
+            if (userData.followers > 100) score += 30;
+            else if (userData.followers > 10) score += 15;
+
+            return Math.min(score, 100);
+        }
+
+        function calculateRepositoryOrganization(repos) {
+            if (repos.length === 0) return 0;
+            const publicRepos = repos.filter(r => !r.fork);
+            if (publicRepos.length === 0) return 0;
+
+            let score = 0;
+            const withDesc = publicRepos.filter(r => r.description && r.description.length > 10).length;
+            score += (withDesc / publicRepos.length) * 30;
+
+            const withTopics = publicRepos.filter(r => r.topics && r.topics.length > 0).length;
+            score += (withTopics / publicRepos.length) * 25;
+
+            const withHomepage = publicRepos.filter(r => r.homepage).length;
+            score += (withHomepage / publicRepos.length) * 20;
+
+            const goodNames = publicRepos.filter(r => r.name.length > 3 && !r.name.includes('test')).length;
+            score += (goodNames / publicRepos.length) * 25;
+
+            return Math.min(score, 100);
+        }
+
+        function calculateProjectImpact(repos) {
+            if (repos.length === 0) return 0;
+            const publicRepos = repos.filter(r => !r.fork);
+            if (publicRepos.length === 0) return 0;
+
+            const totalStars = publicRepos.reduce((sum, r) => sum + r.stargazers_count, 0);
+            const totalForks = publicRepos.reduce((sum, r) => sum + r.forks_count, 0);
+
+            let score = 0;
+            if (totalStars > 100) score += 35;
+            else if (totalStars > 10) score += 20;
+            else if (totalStars > 0) score += 10;
+
+            if (totalForks > 50) score += 30;
+            else if (totalForks > 10) score += 15;
+            else if (totalForks > 0) score += 8;
+
+            const starredProjects = publicRepos.filter(r => r.stargazers_count > 0).length;
+            score += Math.min((starredProjects / publicRepos.length) * 35, 35);
+
+            return Math.min(score, 100);
+        }
+
+        function calculateTechnicalDepth(repos) {
+            if (repos.length === 0) return 0;
+            const publicRepos = repos.filter(r => !r.fork);
+            if (publicRepos.length === 0) return 0;
+
+            let score = 0;
+            const languages = new Set(publicRepos.filter(r => r.language).map(r => r.language));
+            score += Math.min(languages.size * 15, 40);
+
+            const largeProjects = publicRepos.filter(r => r.size > 1000).length;
+            score += Math.min(largeProjects * 20, 30);
+
+            const complexProjects = publicRepos.filter(r => (r.stargazers_count + r.forks_count) > 20).length;
+            score += Math.min(complexProjects * 15, 30);
+
+            return Math.min(score, 100);
+        }
+
+        function calculateWeightedScore(scores) {
+            const weights = {
+                documentation: 0.20,
+                codeStructure: 0.20,
+                activityConsistency: 0.20,
+                repositoryOrganization: 0.15,
+                projectImpact: 0.15,
+                technicalDepth: 0.10
+            };
+
+            let total = 0;
+            Object.keys(scores).forEach(key => {
+                total += scores[key] * weights[key];
+            });
+
+            return Math.round(total);
+        }
+
+        function generateStrengths(scores, repos) {
+            const strengths = [];
+
+            if (scores.documentation > 70) {
+                strengths.push('Excellent documentation and detailed project descriptions');
+            }
+            if (scores.projectImpact > 70) {
+                strengths.push('Projects have significant community impact with good stars and forks');
+            }
+            if (scores.technicalDepth > 70) {
+                strengths.push('Demonstrated strong technical depth across multiple programming languages');
+            }
+            if (scores.activityConsistency > 70) {
+                strengths.push('Consistent and regular project activity showing active engagement');
+            }
+            if (scores.codeStructure > 70) {
+                strengths.push('Well-structured repositories with excellent code organization');
+            }
+
+            if (repos.filter(r => !r.fork && r.stargazers_count > 5).length > 0) {
+                strengths.push('Multiple projects gaining meaningful community interest and recognition');
+            }
+
+            if (strengths.length === 0) {
+                strengths.push('You have an active GitHub presence - excellent starting point for your portfolio!');
+            }
+
+            return strengths.slice(0, 6);
+        }
+
+        function generateImprovements(scores, repos) {
+            const improvements = [];
+
+            if (scores.documentation < 50) {
+                improvements.push('Add comprehensive READMEs to all public repositories with clear explanations');
+            }
+            if (scores.repositoryOrganization < 50) {
+                improvements.push('Improve repository naming conventions and add detailed descriptions');
+            }
+            if (scores.projectImpact < 50) {
+                improvements.push('Focus on building projects with real-world utility and practical applications');
+            }
+            if (scores.activityConsistency < 50) {
+                improvements.push('Increase consistent contributions and maintain regular commit activity');
+            }
+            if (scores.technicalDepth < 50) {
+                improvements.push('Explore diverse technologies and work on more complex projects');
+            }
+
+            const forkedRepos = repos.filter(r => r.fork).length;
+            if (forkedRepos > repos.length / 2) {
+                improvements.push('Focus more on original projects - reduce the fork-to-original ratio');
+            }
+
+            return improvements.slice(0, 6);
+        }
+
+        function generateRecommendations(scores, repos) {
+            const recommendations = [];
+
+            recommendations.push({
+                title: '📌 Pin Your Best 3-4 Projects',
+                text: 'Pin your most impressive repositories on your GitHub profile. This is the first thing recruiters see.'
+            });
+
+            recommendations.push({
+                title: '📝 Write Comprehensive READMEs',
+                text: 'Each repository should have a detailed README including problem statement, solution, tech stack, features, and setup instructions.'
+            });
+
+            recommendations.push({
+                title: '🖼️ Add Badges & Screenshots',
+                text: 'Include build status badges, code quality badges, license information, and screenshots showing your projects in action.'
+            });
+
+            recommendations.push({
+                title: '📅 Maintain Consistent Activity',
+                text: 'Make meaningful contributions regularly. Recruiters value consistency. Aim for commits at least 3-4 times per week.'
+            });
+
+            recommendations.push({
+                title: '✨ Improve Code Quality',
+                text: 'Write clean, well-organized code with meaningful comments. Use proper naming conventions and consider adding CI/CD badges.'
+            });
+
+            recommendations.push({
+                title: '🔗 Complete Your GitHub Profile',
+                text: 'Add a professional bio, profile picture, location, website link, and keep your profile public and updated.'
+            });
+
+            return recommendations;
+        }
+
+        function analyzeLanguages(repos) {
+            const languageStats = {};
+
+            repos.forEach(repo => {
+                if (repo.language && !repo.fork) {
+                    languageStats[repo.language] = (languageStats[repo.language] || 0) + 1;
+                }
+            });
+
+            const totalLangs = Object.values(languageStats).reduce((a, b) => a + b, 0) || 1;
+
+            return Object.entries(languageStats)
+                .map(([lang, count]) => ({
+                    name: lang,
+                    percentage: Math.round((count / totalLangs) * 100),
+                    count: count
+                }))
+                .sort((a, b) => b.percentage - a.percentage);
+        }
+
+        function displayResults(userData, repos, analysis) {
+            hideLoading();
+
+            document.getElementById('portfolioScore').textContent = analysis.weightedScore;
+            document.getElementById('scoreInterpretation').textContent = getScoreInterpretation(analysis.weightedScore);
+
+            document.getElementById('userAvatar').src = userData.avatar_url;
+            document.getElementById('userName').textContent = userData.name || userData.login;
+            document.getElementById('userUsername').textContent = '@' + userData.login;
+            document.getElementById('userBio').textContent = userData.bio || 'GitHub Developer';
+            
+            // Details Section
+            document.getElementById('userLocation').textContent = userData.location || 'Not Specified';
+            document.getElementById('userWebsite').textContent = userData.blog ? `<a href="${userData.blog}" target="_blank">${userData.blog}</a>` : 'Not Specified';
+            document.getElementById('userCompany').textContent = userData.company || 'Not Specified';
+            document.getElementById('accountCreated').textContent = new Date(userData.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('lastActivity').textContent = userData.updated_at ? new Date(userData.updated_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A';
+            document.getElementById('publicGists').textContent = userData.public_gists || '0';
+            document.getElementById('accountType').textContent = userData.type === 'User' ? '👤 User Account' : '🏢 Organization';
+            
+            document.getElementById('repoCount').textContent = repos.filter(r => !r.fork).length;
+            document.getElementById('followerCount').textContent = userData.followers;
+            document.getElementById('followingCount').textContent = userData.following;
+            document.getElementById('starCount').textContent = repos.reduce((sum, r) => sum + r.stargazers_count, 0);
+
+            updateScoreDisplay('docScore', 'docProgress', analysis.scores.documentation);
+            updateScoreDisplay('codeScore', 'codeProgress', analysis.scores.codeStructure);
+            updateScoreDisplay('activityScore', 'activityProgress', analysis.scores.activityConsistency);
+            updateScoreDisplay('orgScore', 'orgProgress', analysis.scores.repositoryOrganization);
+            updateScoreDisplay('impactScore', 'impactProgress', analysis.scores.projectImpact);
+            updateScoreDisplay('techScore', 'techProgress', analysis.scores.technicalDepth);
+
+            document.getElementById('strengthsList').innerHTML = analysis.strengths
+                .map(s => `<li>${s}</li>`)
+                .join('');
+
+            document.getElementById('improvementsList').innerHTML = analysis.improvements
+                .map(i => `<li>${i}</li>`)
+                .join('');
+
+            document.getElementById('recommendationsList').innerHTML = analysis.recommendations
+                .map(r => `
+                    <div class="recommendation-item">
+                        <div class="recommendation-title">${r.title}</div>
+                        <div class="recommendation-text">${r.text}</div>
+                    </div>
+                `)
+                .join('');
+
+            const topRepos = repos
+                .filter(r => !r.fork)
+                .sort((a, b) => (b.stargazers_count + b.forks_count) - (a.stargazers_count + a.forks_count))
+                .slice(0, 6);
+
+            document.getElementById('reposList').innerHTML = topRepos
+                .map(repo => `
+                    <div class="repo-item">
+                        <div class="repo-name">${repo.name}</div>
+                        <div class="repo-desc">${repo.description || 'No description'}</div>
+                        <div class="repo-meta">
+                            <span>⭐ ${repo.stargazers_count}</span>
+                            <span>🔀 ${repo.forks_count}</span>
+                            ${repo.language ? `<span class="repo-lang">${repo.language}</span>` : ''}
+                        </div>
+                    </div>
+                `)
+                .join('');
+
+            document.getElementById('languageChart').innerHTML = analysis.languages
+                .slice(0, 6)
+                .map(lang => `
+                    <div class="language-item">
+                        <div class="language-name">${lang.name}</div>
+                        <div class="language-percent">${lang.percentage}%</div>
+                    </div>
+                `)
+                .join('');
+
+            resultsSection.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateScoreDisplay(scoreId, progressId, value) {
+            const rounded = Math.round(value);
+            document.getElementById(scoreId).textContent = rounded + '%';
+            document.getElementById(progressId).style.width = rounded + '%';
+        }
+
+        function getScoreInterpretation(score) {
+            if (score >= 90) return '🎯 Outstanding! Your portfolio is recruiter-ready. Keep it up!';
+            if (score >= 75) return '✨ Great work! Your profile is strong. Minor improvements will make it perfect.';
+            if (score >= 60) return '💡 Good foundation. With some focused improvements, you\'ll stand out.';
+            if (score >= 45) return '🚀 Room to grow. Focus on documentation and project consistency.';
+            return '📈 Getting started. Work on README quality and repository structure.';
+        }
+
+        function showLoading() {
+            analyzeBtn.disabled = true;
+            loadingState.classList.remove('hidden');
+            errorState.classList.add('hidden');
+            resultsSection.classList.add('hidden');
+        }
+
+        function hideLoading() {
+            analyzeBtn.disabled = false;
+            loadingState.classList.add('hidden');
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorState.classList.remove('hidden');
+            loadingState.classList.add('hidden');
+            resultsSection.classList.add('hidden');
+        }
+
+        function resetForm() {
+            githubInput.value = '';
+            resultsSection.classList.add('hidden');
+            errorState.classList.add('hidden');
+            loadingState.classList.add('hidden');
+            githubInput.focus();
+        }
+
+        // Allow Enter key to submit
+        githubInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleAnalysis();
+            }
+        });
+    </script>
+</body>
+</html>
