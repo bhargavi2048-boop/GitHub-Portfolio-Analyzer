@@ -3593,6 +3593,7 @@ Generated: ${new Date().toLocaleString()}`;
             showSkeletonLoading();
             errorState.classList.add('hidden');
             resultsSection.classList.add('hidden');
+            document.querySelectorAll('.reveal').forEach(el => { el.classList.remove('visible'); el.style.display = 'none'; });
         };
 
         // Override showError to use toast
