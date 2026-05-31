@@ -16,7 +16,6 @@
 
 <br/>
 
-![GitHub Portfolio Analyzer — score dashboard, top repositories, language distribution, and 9 enterprise AI analysis panels on a teal-gradient interface](./docs/screenshot.png)
 
 <br/>
 
