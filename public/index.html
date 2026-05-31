@@ -2743,11 +2743,28 @@ body.dark .onboard-tip { background: #0f2a30; color: #e8f1f3; }
         }
 
         function showLoading() {
-            analyzeBtn.disabled = true;
-            loadingState.classList.remove('hidden');
-            errorState.classList.add('hidden');
-            resultsSection.classList.add('hidden');
+    analyzeBtn.disabled = true;
+    loadingState.classList.remove('hidden');
+    errorState.classList.add('hidden');
+    resultsSection.classList.add('hidden');
+
+    // Reset all feature sections so stale/empty ones don't leave blank space
+    const sectionsToReset = [
+        'readmeAnalyzerSection', 'compareResults', 'xpSection',
+        'achievementsSection', 'aiSection', 'chartsSection',
+        'heatmapSection', 'statsInsights', 'atsSection',
+        'linkedinSummaryBox', 'shareSection', 'qrWrap'
+    ];
+    sectionsToReset.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.style.display = 'none';
+            // Optional: clear stale inner content too
+            // el.innerHTML = '';
         }
+    });
+}
+
 
         function hideLoading() {
             analyzeBtn.disabled = false;
