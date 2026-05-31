@@ -4,13 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitHub Portfolio Analyzer & Enhancer - Bhargavi</title>
-     <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "wzmo8ym79v");
-</script>
     <style>
         * {
             margin: 0;
@@ -2743,28 +2736,11 @@ body.dark .onboard-tip { background: #0f2a30; color: #e8f1f3; }
         }
 
         function showLoading() {
-    analyzeBtn.disabled = true;
-    loadingState.classList.remove('hidden');
-    errorState.classList.add('hidden');
-    resultsSection.classList.add('hidden');
-
-    // Reset all feature sections so stale/empty ones don't leave blank space
-    const sectionsToReset = [
-        'readmeAnalyzerSection', 'compareResults', 'xpSection',
-        'achievementsSection', 'aiSection', 'chartsSection',
-        'heatmapSection', 'statsInsights', 'atsSection',
-        'linkedinSummaryBox', 'shareSection', 'qrWrap'
-    ];
-    sectionsToReset.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.style.display = 'none';
-            // Optional: clear stale inner content too
-            // el.innerHTML = '';
+            analyzeBtn.disabled = true;
+            loadingState.classList.remove('hidden');
+            errorState.classList.add('hidden');
+            resultsSection.classList.add('hidden');
         }
-    });
-}
-
 
         function hideLoading() {
             analyzeBtn.disabled = false;
@@ -3099,7 +3075,7 @@ ${a.languages.slice(0,6).map(l=>`- ${l.name}: ${l.percentage}%`).join('\n')}
         // Scroll reveal observer
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
-        }, { threshold: 0 });
+        }, { threshold: 0.1 });
 
         // Floating particles
         (function initParticles() {
@@ -3597,41 +3573,20 @@ Generated: ${new Date().toLocaleString()}`;
             document.getElementById('shareSection').style.display = '';
 
             // Setup reveal observers
-            document.querySelectorAll('.reveal').forEach(el => {
-                revealObserver.observe(el);
-                const rect = el.getBoundingClientRect();
-                if (rect.top < window.innerHeight) el.classList.add('visible');
-            });
+            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
             // Show toast
             showToast(`✅ Analysis complete for @${userData.login}!`, 'success');
         };
+
+        // Override showLoading to use skeleton
         const _origShowLoading = showLoading;
         showLoading = function() {
             analyzeBtn.disabled = true;
+            showSkeletonLoading();
             errorState.classList.add('hidden');
             resultsSection.classList.add('hidden');
-            loadingState.classList.remove('hidden');
-            document.querySelectorAll('.reveal').forEach(el => { el.classList.remove('visible'); el.style.display = 'none'; });
         };
-
-    const sectionsToReset = [
-        'xpSection', 'statsInsights', 'aiSection', 'achievementsSection',
-        'chartsSection', 'heatmapSection', 'atsSection', 'shareSection',
-        'linkedinSummaryBox', 'qrWrap', 'compareResults',
-        'repoHealthSection', 'techStackSection', 'recruiterSnapshotSection',
-        'streakTrackerSection', 'starLeaderSection', 'profileAdvisorSection',
-        'aiQualityJudgeSection', 'repoDeepAnalysisSection', 'readmeAnalyzerSection',
-        'portfolioStrengthSection', 'architectureDetectionSection',
-        'contributionConsistencySection', 'openSourceReadinessSection',
-        'growthTimelineSection', 'professionalExportSection'
-    ];
-
-    sectionsToReset.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.style.display = 'none';
-    });
-};
 
         // Override showError to use toast
         const _origShowError = showError;
@@ -3690,11 +3645,7 @@ Generated: ${new Date().toLocaleString()}`;
         };
 
         // Setup reveal for all existing sections on load
-        document.querySelectorAll('.reveal').forEach(el => {
-                revealObserver.observe(el);
-                const rect = el.getBoundingClientRect();
-                if (rect.top < window.innerHeight) el.classList.add('visible');
-            });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 
 
