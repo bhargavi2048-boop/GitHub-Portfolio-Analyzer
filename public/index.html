@@ -3607,15 +3607,31 @@ Generated: ${new Date().toLocaleString()}`;
             showToast(`✅ Analysis complete for @${userData.login}!`, 'success');
         };
 
-        // Override showLoading to use skeleton
-        const _origShowLoading = showLoading;
-        showLoading = function() {
-            analyzeBtn.disabled = true;
-            showSkeletonLoading();
-            errorState.classList.add('hidden');
-            resultsSection.classList.add('hidden');
-            document.querySelectorAll('.reveal').forEach(el => { el.classList.remove('visible'); el.style.display = 'none'; });
-        };
+           // Override showLoading to use skeleton
+const _origShowLoading = showLoading;
+showLoading = function() {
+    analyzeBtn.disabled = true;
+    showSkeletonLoading();
+    errorState.classList.add('hidden');
+    resultsSection.classList.add('hidden');
+
+    const sectionsToReset = [
+        'xpSection', 'statsInsights', 'aiSection', 'achievementsSection',
+        'chartsSection', 'heatmapSection', 'atsSection', 'shareSection',
+        'linkedinSummaryBox', 'qrWrap', 'compareResults',
+        'repoHealthSection', 'techStackSection', 'recruiterSnapshotSection',
+        'streakTrackerSection', 'starLeaderSection', 'profileAdvisorSection',
+        'aiQualityJudgeSection', 'repoDeepAnalysisSection', 'readmeAnalyzerSection',
+        'portfolioStrengthSection', 'architectureDetectionSection',
+        'contributionConsistencySection', 'openSourceReadinessSection',
+        'growthTimelineSection', 'professionalExportSection'
+    ];
+
+    sectionsToReset.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+};
 
         // Override showError to use toast
         const _origShowError = showError;
