@@ -3606,14 +3606,14 @@ Generated: ${new Date().toLocaleString()}`;
             // Show toast
             showToast(`✅ Analysis complete for @${userData.login}!`, 'success');
         };
-
-           // Override showLoading to use skeleton
-const _origShowLoading = showLoading;
-showLoading = function() {
-    analyzeBtn.disabled = true;
-    showSkeletonLoading();
-    errorState.classList.add('hidden');
-    resultsSection.classList.add('hidden');
+        const _origShowLoading = showLoading;
+        showLoading = function() {
+            analyzeBtn.disabled = true;
+            errorState.classList.add('hidden');
+            resultsSection.classList.add('hidden');
+            loadingState.classList.remove('hidden');
+            document.querySelectorAll('.reveal').forEach(el => { el.classList.remove('visible'); el.style.display = 'none'; });
+        };
 
     const sectionsToReset = [
         'xpSection', 'statsInsights', 'aiSection', 'achievementsSection',
@@ -3690,7 +3690,11 @@ showLoading = function() {
         };
 
         // Setup reveal for all existing sections on load
-        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+        document.querySelectorAll('.reveal').forEach(el => {
+                revealObserver.observe(el);
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight) el.classList.add('visible');
+            });
 
 
 
