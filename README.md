@@ -19,7 +19,7 @@
 
 <br/>
 
-[**Live Demo**](https://your-domain.com) · [**API Docs**](http://localhost:5000/api/docs) · [**Report a Bug**](https://github.com/your-org/github-portfolio-analyzer/issues) · [**Request a Feature**](https://github.com/your-org/github-portfolio-analyzer/issues) · [**Changelog**](./CHANGELOG.md)
+Demo Link: "https://github-portfolio-analyzer-r0zy.onrender.com"
 
 </div>
 
